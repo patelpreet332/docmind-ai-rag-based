@@ -1,36 +1,162 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DocMind AI
 
-## Getting Started
+## Project Overview
+DocMind AI is an AI-powered document intelligence platform for uploading PDF files, indexing their content with vector embeddings, and answering user questions with retrieval-augmented generation (RAG).
 
-First, run the development server:
+Business purpose:
+- Reduce manual document review time
+- Enable fast, context-grounded Q&A over internal documents
+- Provide a production-ready base for document copilots and knowledge assistants
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Core functionality:
+- PDF upload and text extraction
+- Chunking and embedding generation
+- Vector similarity search in MongoDB
+- Contextual answer generation via Groq LLM
+
+## Features
+- Upload and process PDF files
+- Persistent document catalog
+- Multi-mode answer behavior:
+  - `strict`: grounded to document context
+  - `expert`: document-first with additional expert guidance
+  - `summary`: concise response mode
+- Health check endpoint for service status
+
+## Tech Stack
+Frontend:
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS 4
+
+Backend:
+- Next.js Route Handlers (`app/api/*`)
+- TypeScript
+
+Database:
+- MongoDB (documents + chunks collections)
+- MongoDB Vector Search (`$vectorSearch`)
+
+Authentication:
+- Not implemented in current repository
+
+AI/LLM:
+- Groq API (`groq-sdk`) for chat completions
+- `@xenova/transformers` (`all-MiniLM-L6-v2`) for embeddings
+
+Infrastructure:
+- Node.js runtime (Next.js server)
+
+Storage:
+- MongoDB (metadata, extracted text, embeddings)
+
+Queue system:
+- Not implemented in current repository
+
+Testing:
+- No automated test suite currently configured
+
+DevOps:
+- No CI/CD workflow currently configured in this repository
+
+## System Architecture
+1. User uploads a PDF from the web client.
+2. `/api/upload` extracts text (`pdf-parse`), stores document metadata, chunks text, computes embeddings, and stores chunks in MongoDB.
+3. User asks a question from the selected document.
+4. `/api/chat` embeds the question, runs `$vectorSearch` on chunk embeddings, builds context, and sends prompt to Groq.
+5. API returns grounded answer and source chunk count.
+
+## Project Workflow
+- Upload Workflow:
+  1. Select PDF in UI
+  2. Submit to `/api/upload`
+  3. Persist document + chunks
+  4. Refresh document list
+- Q&A Workflow:
+  1. Select uploaded document
+  2. Ask question in chosen mode
+  3. Retrieve relevant chunks by vector similarity
+  4. Generate answer from context
+  5. Render answer and source count
+
+## Flow Diagram
+```mermaid
+flowchart TD
+  A[User Uploads PDF] --> B[/api/upload]
+  B --> C[Extract Text]
+  C --> D[Chunk Text]
+  D --> E[Generate Embeddings]
+  E --> F[(MongoDB: chunks/documents)]
+  G[User Asks Question] --> H[/api/chat]
+  H --> I[Embed Question]
+  I --> J[Vector Search in MongoDB]
+  J --> K[Build Context]
+  K --> L[Groq Chat Completion]
+  L --> M[Answer + Source Count]
+  M --> N[UI Response]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation Guide
+1. Clone repository:
+```bash
+git clone <repo-url>
+cd docmind-ai
+```
+2. Install dependencies:
+```bash
+npm install
+```
+3. Configure environment variables:
+```bash
+cp .env.example .env.local
+# fill in real values
+```
+4. Run development server:
+```bash
+npm run dev
+```
+5. Build for production:
+```bash
+npm run build
+npm run start
+```
+6. Lint:
+```bash
+npm run lint
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
+Required:
+- `MONGODB_URI`: MongoDB connection string
+- `DB_NAME`: target MongoDB database name
+- `GROQ_API_KEY`: Groq API key for LLM calls
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Optional:
+- `GROQ_MODEL`: chat model override (default: `llama-3.3-70b-versatile`)
 
-## Learn More
+## Third-Party Services
+- Groq API
+- MongoDB Atlas (or compatible MongoDB deployment with Vector Search)
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
+- `npm run dev`: start local dev server
+- `npm run build`: build production bundle
+- `npm run start`: run production server
+- `npm run lint`: run ESLint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
+This project can be deployed to platforms supporting Next.js server workloads (for example: Vercel, Docker-based VPS, or cloud VM/container platforms). Ensure MongoDB connectivity and environment variables are configured in deployment secrets.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Security Notes
+- Never commit `.env.local` or live API/database credentials.
+- Rotate any credential that was previously committed.
+- Restrict MongoDB network access and privileges.
+- Consider adding authentication/authorization before production launch.
 
-## Deploy on Vercel
+## Performance Notes
+- Embeddings are generated per chunk at upload time; large PDFs can increase processing latency.
+- Vector search quality and latency depend on chunk size, index settings, and model quality.
+- For scale, consider background ingestion workers and batched embedding pipelines.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Screenshots
+You can add project screenshots here later.

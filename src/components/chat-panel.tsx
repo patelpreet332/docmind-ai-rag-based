@@ -17,7 +17,6 @@ export function ChatPanel({
   const [lastQuestion, setLastQuestion] = useState('')
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null)
   const [mode, setMode] = useState('strict')
-  // const [sources, setSources] = useState<any[]>([])
 
   async function askQuestion() {
     const trimmedQuestion = question.trim()
@@ -52,7 +51,6 @@ export function ChatPanel({
       setSourceCount(typeof data.sources === 'number' ? data.sources : null)
       setLastQuestion(trimmedQuestion)
       setLastUpdatedAt(new Date())
-      // setSources(data.sources || [])
     } catch (askError) {
       const message =
         askError instanceof Error
@@ -181,28 +179,6 @@ export function ChatPanel({
           </div>
         </>
       )}
-
-      {/* {sources.length > 0 && (
-        <div className='mt-4 rounded-xl border border-zinc-800 bg-zinc-950 p-4'>
-          <p className='mb-3 text-sm font-semibold text-zinc-300'>
-            Sources Used
-          </p>
-
-          <div className='space-y-3'>
-            {sources.map((source) => (
-              <div
-                key={source.id}
-                className='rounded-lg border border-zinc-800 p-3 text-sm text-zinc-400'
-              >
-                <span className='mb-1 block text-xs text-indigo-400'>
-                  Chunk {source.id}
-                </span>
-                {source.text}...
-              </div>
-            ))}
-          </div>
-        </div>
-      )} */}
     </div>
   )
 }

@@ -23,12 +23,6 @@ export async function POST(req: NextRequest) {
 
     // 1. Embed user question
     const questionEmbedding = await getEmbedding(normalizedQuestion)
-    console.log(
-      'Question embedding generated',
-      questionEmbedding.slice(0, 5),
-      '...',
-      questionEmbedding.length,
-    )
 
     // 2. Vector search in chunks collection
     const chunks = await db
@@ -109,30 +103,9 @@ export async function POST(req: NextRequest) {
       ${question}
 `
 
-    // const prompt = `
-    //   You are DocMind AI.
-
-    //   Use ONLY the provided document context.
-
-    //   Instructions:
-    //   - Give complete and accurate answers.
-    //   - If answer spans multiple sections, combine them.
-    //   - Use bullet points when useful.
-    //   - Be clear and professional.
-    //   - If information is missing, say exactly what is missing.
-    //   - Do not invent facts.
-
-    //   CONTEXT:
-    //   ${context}
-
-    //   QUESTION:
-    //   ${normalizedQuestion}
-    //   `
-
     // 3. Ask LLM
     const completion = await groq.chat.completions.create({
-      // model: 'llama-3.1-8b-instant',
-      model: 'llama-3.3-70b-versatile',
+      model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
       messages: [
         {
           role: 'user',
@@ -147,11 +120,6 @@ export async function POST(req: NextRequest) {
       success: true,
       answer,
       sources: chunks.length
-      // sources: chunks.map((chunk, index) => ({
-      //   id: index + 1,
-      //   text: chunk.text.slice(0, 220),
-      //   score: chunk.score,
-      // })),
     })
   } catch (error) {
     console.error(error)
