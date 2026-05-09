@@ -82,18 +82,18 @@ DevOps:
 ## Flow Diagram
 ```mermaid
 flowchart TD
-  A[User Uploads PDF] --> B[/api/upload]
-  B --> C[Extract Text]
-  C --> D[Chunk Text]
-  D --> E[Generate Embeddings]
-  E --> F[(MongoDB: chunks/documents)]
-  G[User Asks Question] --> H[/api/chat]
-  H --> I[Embed Question]
-  I --> J[Vector Search in MongoDB]
-  J --> K[Build Context]
-  K --> L[Groq Chat Completion]
-  L --> M[Answer + Source Count]
-  M --> N[UI Response]
+  A["User Uploads PDF"] --> B["API /api/upload"]
+  B --> C["Extract Text"]
+  C --> D["Chunk Text"]
+  D --> E["Generate Embeddings"]
+  E --> F["MongoDB chunks/documents"]
+  G["User Asks Question"] --> H["API /api/chat"]
+  H --> I["Embed Question"]
+  I --> J["Vector Search in MongoDB"]
+  J --> K["Build Context"]
+  K --> L["Groq Chat Completion"]
+  L --> M["Answer and Source Count"]
+  M --> N["UI Response"]
 ```
 
 ## Installation Guide
