@@ -50,15 +50,6 @@ Infrastructure:
 Storage:
 - MongoDB (metadata, extracted text, embeddings)
 
-Queue system:
-- Not implemented in current repository
-
-Testing:
-- No automated test suite currently configured
-
-DevOps:
-- No CI/CD workflow currently configured in this repository
-
 ## System Architecture
 1. User uploads a PDF from the web client.
 2. `/api/upload` extracts text (`pdf-parse`), stores document metadata, chunks text, computes embeddings, and stores chunks in MongoDB.
@@ -144,19 +135,18 @@ Optional:
 - `npm run start`: run production server
 - `npm run lint`: run ESLint
 
-## Deployment
-This project can be deployed to platforms supporting Next.js server workloads (for example: Vercel, Docker-based VPS, or cloud VM/container platforms). Ensure MongoDB connectivity and environment variables are configured in deployment secrets.
+## System Interface Preview
+Main system screens are shown below:
 
-## Security Notes
-- Never commit `.env.local` or live API/database credentials.
-- Rotate any credential that was previously committed.
-- Restrict MongoDB network access and privileges.
-- Consider adding authentication/authorization before production launch.
+### 1. Main Dashboard
+![Main Dashboard](public/docs/system-images/upload-file-picker.png)
 
-## Performance Notes
-- Embeddings are generated per chunk at upload time; large PDFs can increase processing latency.
-- Vector search quality and latency depend on chunk size, index settings, and model quality.
-- For scale, consider background ingestion workers and batched embedding pipelines.
+### 2. File Upload Selection
+![File Upload Selection](public/docs/system-images/main-dashboard.png)
 
-## Screenshots
-You can add project screenshots here later.
+### 3. Q&A Interaction
+![Q&A Interaction](public/docs/system-images/question-answering.png)
+
+### 4. Expert Mode Response
+![Expert Mode Response](public/docs/system-images/expert-mode-response.png)
+
