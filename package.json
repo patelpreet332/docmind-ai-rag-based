@@ -1,5 +1,5 @@
 {
-  "name": "docmind-ai",
+  "name": "docmind-ai-rag-based",
   "version": "0.1.0",
   "private": true,
   "scripts": {

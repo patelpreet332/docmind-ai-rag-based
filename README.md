@@ -1,7 +1,7 @@
-# DocMind AI
+# docmind ai rag based
 
 ## Project Overview
-DocMind AI is an AI-powered document intelligence platform for uploading PDF files, indexing their content with vector embeddings, and answering user questions with retrieval-augmented generation (RAG).
+docmind ai rag based is an AI-powered document intelligence platform for uploading PDF files, indexing their content with vector embeddings, and answering user questions with retrieval-augmented generation (RAG).
 
 Business purpose:
 - Reduce manual document review time
@@ -21,7 +21,6 @@ Core functionality:
   - `strict`: grounded to document context
   - `expert`: document-first with additional expert guidance
   - `summary`: concise response mode
-- Health check endpoint for service status
 
 ## Tech Stack
 Frontend:
@@ -37,15 +36,9 @@ Database:
 - MongoDB (documents + chunks collections)
 - MongoDB Vector Search (`$vectorSearch`)
 
-Authentication:
-- Not implemented in current repository
-
 AI/LLM:
 - Groq API (`groq-sdk`) for chat completions
 - `@xenova/transformers` (`all-MiniLM-L6-v2`) for embeddings
-
-Infrastructure:
-- Node.js runtime (Next.js server)
 
 Storage:
 - MongoDB (metadata, extracted text, embeddings)
@@ -149,4 +142,3 @@ Main system screens are shown below:
 
 ### 4. Expert Mode Response
 ![Expert Mode Response](public/docs/system-images/expert-mode-response.png)
-
